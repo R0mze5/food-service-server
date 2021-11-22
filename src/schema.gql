@@ -11,15 +11,60 @@ type Restaurant {
   categoryName: String!
 }
 
+type User {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  email: String!
+  password: String!
+  role: UserRole!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum UserRole {
+  Client
+  Owner
+  Delivery
+}
+
+type CreateAccountOutput {
+  error: String
+  ok: Boolean!
+}
+
+type LoginOutput {
+  error: String
+  ok: Boolean!
+  token: String
+}
+
 type Query {
+  getProfile: User!
   isPizzaGood: Boolean!
   myRestaurant: Restaurant!
   restaurants: [Restaurant!]!
 }
 
 type Mutation {
+  createAccount(input: CreateAccountDto!): CreateAccountOutput!
+  login(input: LoginDto!): LoginOutput!
   createRestaurant(input: CreateRestaurantDto!): Restaurant!
   updateRestaurant(id: Float!, data: UpdateRestaurantInputType!): Restaurant!
+}
+
+input CreateAccountDto {
+  email: String!
+  password: String!
+  role: UserRole!
+}
+
+input LoginDto {
+  email: String!
+  password: String!
 }
 
 input CreateRestaurantDto {
