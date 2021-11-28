@@ -16,6 +16,7 @@ type User {
   createdAt: DateTime!
   updatedAt: DateTime!
   email: String!
+  emailVerified: Boolean!
   password: String!
   role: UserRole!
 }
@@ -36,14 +37,31 @@ type CreateAccountOutput {
   ok: Boolean!
 }
 
+type EditProfileOutput {
+  error: String
+  ok: Boolean!
+}
+
 type LoginOutput {
   error: String
   ok: Boolean!
   token: String
 }
 
+type UserProfileOutput {
+  error: String
+  ok: Boolean!
+  user: User
+}
+
+type VerifyEmailOutput {
+  error: String
+  ok: Boolean!
+}
+
 type Query {
   getProfile: User!
+  getUserDetails(userId: Float!): UserProfileOutput!
   isPizzaGood: Boolean!
   myRestaurant: Restaurant!
   restaurants: [Restaurant!]!
@@ -51,7 +69,9 @@ type Query {
 
 type Mutation {
   createAccount(input: CreateAccountDto!): CreateAccountOutput!
+  editProfile(input: EditProfileInput!): EditProfileOutput!
   login(input: LoginDto!): LoginOutput!
+  verifyEmail(input: VerifyEmailInput!): VerifyEmailOutput!
   createRestaurant(input: CreateRestaurantDto!): Restaurant!
   updateRestaurant(id: Float!, data: UpdateRestaurantInputType!): Restaurant!
 }
@@ -62,9 +82,18 @@ input CreateAccountDto {
   role: UserRole!
 }
 
+input EditProfileInput {
+  email: String
+  password: String
+}
+
 input LoginDto {
   email: String!
   password: String!
+}
+
+input VerifyEmailInput {
+  code: String!
 }
 
 input CreateRestaurantDto {

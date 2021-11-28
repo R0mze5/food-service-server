@@ -8,7 +8,7 @@ import {
 import { hash } from 'bcrypt';
 import { IsEmail, IsEnum } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.enity';
-import { BeforeInsert, Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 // type UserRole = 'client' | 'owner' | 'delivery';
@@ -29,7 +29,11 @@ export class User extends CoreEntity {
   @IsEmail()
   email: string;
 
-  @Column()
+  @Column({ default: false })
+  @Field(() => Boolean)
+  emailVerified: boolean;
+
+  @Column({ select: false })
   @Field(() => String)
   password: string;
 
@@ -39,13 +43,16 @@ export class User extends CoreEntity {
   role: UserRole;
 
   @BeforeInsert()
+  @BeforeUpdate()
   async hashPassword(): Promise<void> {
-    try {
-      this.password = await hash(this.password, 10);
-    } catch (error) {
-      console.log(error);
-      // send error to catch of create user service
-      throw new InternalServerErrorException(error);
+    if (this.password) {
+      try {
+        this.password = await hash(this.password, 10);
+      } catch (error) {
+        console.log(error);
+        // send error to catch of create user service
+        throw new InternalServerErrorException(error);
+      }
     }
   }
 
