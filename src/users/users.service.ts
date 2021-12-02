@@ -1,4 +1,4 @@
-import { Injectable, UseGuards } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {
@@ -7,9 +7,8 @@ import {
 } from './dtos/create-account.dto';
 import { LoginDto, LoginOutput } from './dtos/login.dto';
 import { User } from './entities/user.entity';
-import { ConfigService } from '@nestjs/config';
+// import { ConfigService } from '@nestjs/config';
 import { JwtService } from 'src/jwt/jwt.service';
-import { AuthGuard } from 'src/auth/auth.guard';
 import { UserProfileOutput } from './dtos/user-profile.dto';
 import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
 import { EmailVerification } from './entities/email-verification.entity';
@@ -22,7 +21,7 @@ export class UsersService {
     @InjectRepository(User) private readonly users: Repository<User>,
     @InjectRepository(EmailVerification)
     private readonly emailVerifications: Repository<EmailVerification>,
-    private readonly config: ConfigService,
+    // private readonly config: ConfigService,
     private readonly jwtService: JwtService,
     private readonly mailService: MailService,
   ) {}
@@ -93,14 +92,11 @@ export class UsersService {
   }
 
   async verifyEmail(code: string): Promise<VerifyEmailOutput> {
-    console.log({ code });
     try {
       const emailVerification = await this.emailVerifications.findOne(
         { code },
         { relations: ['user'] },
       );
-
-      console.log(emailVerification);
 
       if (!emailVerification?.user) {
         return {
@@ -110,8 +106,6 @@ export class UsersService {
       }
 
       const { user, id } = emailVerification;
-
-      console.log(user);
 
       user.emailVerified = true;
 
@@ -171,16 +165,14 @@ export class UsersService {
     }
   }
 
-  async findUserById(id: number): Promise<User> {
-    return this.users.findOne({ id });
-  }
+  // async findUserById(id: number): Promise<User | undefined> {
+  //   return this.users.findOne({ id });
+  // }
 
-  async getUserDetails(id: number): Promise<UserProfileOutput> {
+  async findUserById(id: number): Promise<UserProfileOutput> {
     try {
-      const user = await this.findUserById(id);
-      if (!user) {
-        throw new Error();
-      }
+      const user = await this.users.findOneOrFail(id);
+
       return {
         ok: true,
         user,
@@ -189,7 +181,6 @@ export class UsersService {
       return {
         ok: false,
         error: 'User not found',
-        user: null,
       };
     }
   }

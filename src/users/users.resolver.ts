@@ -29,7 +29,7 @@ export class UsersResolver {
   getUserDetails(
     @Args() { userId }: UserProfileInput,
   ): Promise<UserProfileOutput> {
-    return this.userService.getUserDetails(userId);
+    return this.userService.findUserById(userId);
   }
 
   @Mutation(() => CreateAccountOutput)
