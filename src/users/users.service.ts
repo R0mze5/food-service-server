@@ -83,10 +83,9 @@ export class UsersService {
         ok: true,
       };
     } catch (error) {
-      console.log(error);
       return {
         ok: false,
-        error,
+        error: 'Could not update profile',
       };
     }
   }
@@ -117,11 +116,9 @@ export class UsersService {
         ok: true,
       };
     } catch (error) {
-      console.log(error);
-
       return {
         ok: false,
-        error,
+        error: 'Could not verify email',
       };
     }
   }

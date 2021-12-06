@@ -1,4 +1,4 @@
-import { Global, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CONFIG_OPTIONS } from '../common/common.constants';
 import { EmailVars, MailModuleOptions } from './mail.interfaces';
 import got from 'got';
@@ -12,12 +12,12 @@ export class MailService {
     // this.sendEmail('asd', 'roman.rs.kh@gmail.com', 'sdf', '1231f3i');
   }
 
-  private async sendEmail(
+  async sendEmail(
     subject: string,
     to: string,
     emailVars: EmailVars[],
     template: 'verify-email',
-  ) {
+  ): Promise<boolean> {
     const formData = new FormData();
 
     formData.append(
@@ -30,7 +30,7 @@ export class MailService {
     emailVars.forEach((eVar) => formData.append(`v:${eVar.key}`, eVar.value));
 
     try {
-      await got(
+      await got.post(
         `https://api.mailgun.net/v3/${this.options.emailDomain}/messages`,
         {
           headers: {
@@ -39,11 +39,12 @@ export class MailService {
             ).toString('base64')}`,
           },
           body: formData,
-          method: 'POST',
         },
       );
+
+      return true;
     } catch (error) {
-      console.log(error);
+      return false;
     }
   }
 
