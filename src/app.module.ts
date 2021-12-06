@@ -29,7 +29,9 @@ import { MailModule } from './mail/mail.module';
         process.env.NODE_ENV === 'development' ? '.env.dev' : '.env.test',
       ignoreEnvFile: process.env.NODE_ENV === 'production',
       validationSchema: Joi.object({
-        NODE_ENV: Joi.string().valid('development', 'production').required(),
+        NODE_ENV: Joi.string()
+          .valid('development', 'production', 'test')
+          .required(),
         POSTGRES_HOST: Joi.string().required(),
         POSTGRES_PORT: Joi.string().required(),
         POSTGRES_USER: Joi.string().required(),
@@ -54,7 +56,7 @@ import { MailModule } from './mail/mail.module';
       database: process.env.POSTGRES_DB,
       entities: [Restaurant, User, EmailVerification],
       synchronize: process.env.NODE_ENV !== 'production',
-      logging: true,
+      logging: process.env.NODE_ENV !== 'test',
     }),
     JwtModule.forRoot({
       privateKey: process.env.TOKEN_SECRET,
