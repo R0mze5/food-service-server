@@ -54,7 +54,7 @@ export class UsersService {
     }
   }
 
-  async editUserProfile(
+  async editProfile(
     userId: number,
     editProfileInput: EditProfileInput,
   ): Promise<EditProfileOutput> {
@@ -62,8 +62,27 @@ export class UsersService {
       const user = await this.users.findOne(userId);
 
       if (editProfileInput.email && editProfileInput.email !== user.email) {
+        const isEmailBusy = await this.users.findOne({
+          email: editProfileInput.email,
+        });
+
+        if (isEmailBusy) {
+          return {
+            ok: false,
+            error: 'Email is already taken',
+          };
+        }
+
         user.email = editProfileInput.email;
         user.emailVerified = false;
+
+        const isPrevVerificationExists = await this.emailVerifications.findOne({
+          user,
+        });
+        if (isPrevVerificationExists) {
+          await this.emailVerifications.delete({ user });
+        }
+
         const verification = await this.emailVerifications.save(
           this.emailVerifications.create({
             user,
@@ -161,10 +180,6 @@ export class UsersService {
       };
     }
   }
-
-  // async findUserById(id: number): Promise<User | undefined> {
-  //   return this.users.findOne({ id });
-  // }
 
   async findUserById(id: number): Promise<UserProfileOutput> {
     try {

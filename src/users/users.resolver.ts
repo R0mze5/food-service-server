@@ -45,7 +45,7 @@ export class UsersResolver {
     @AuthUser() { id }: User,
     @Args('input') editProfileInput: EditProfileInput,
   ): Promise<EditProfileOutput> {
-    return this.userService.editUserProfile(id, editProfileInput);
+    return this.userService.editProfile(id, editProfileInput);
   }
 
   @Mutation(() => LoginOutput)

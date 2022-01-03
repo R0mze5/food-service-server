@@ -208,7 +208,7 @@ describe('UserService', () => {
     });
   });
 
-  describe('editUserProfile', () => {
+  describe('editProfile', () => {
     it('should change email', async () => {
       const oldUser = {
         email: 'test@test.com',
@@ -233,7 +233,7 @@ describe('UserService', () => {
       emailVerificationsRepository.create.mockReturnValue(newVerification);
       emailVerificationsRepository.save.mockResolvedValue(newVerification);
 
-      const result = await service.editUserProfile(
+      const result = await service.editProfile(
         editProfileArgs.userId,
         editProfileArgs.input,
       );
@@ -277,7 +277,7 @@ describe('UserService', () => {
 
       userRepository.findOne.mockResolvedValue(oldUser);
 
-      const result = await service.editUserProfile(
+      const result = await service.editProfile(
         editProfileArgs.userId,
         editProfileArgs.input,
       );
@@ -301,7 +301,7 @@ describe('UserService', () => {
 
       userRepository.findOne.mockRejectedValue(new Error());
 
-      const result = await service.editUserProfile(
+      const result = await service.editProfile(
         editProfileArgs.userId,
         editProfileArgs.input,
       );
