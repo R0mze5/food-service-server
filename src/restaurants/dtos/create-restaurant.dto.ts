@@ -1,4 +1,11 @@
-import { InputType, OmitType } from '@nestjs/graphql';
+import {
+  Field,
+  InputType,
+  ObjectType,
+  OmitType,
+  PickType,
+} from '@nestjs/graphql';
+import { MutationOutput } from 'src/common/dtos/output.dto';
 import { Restaurant } from '../entities/restaurant.entity';
 
 // @ArgsType()
@@ -24,9 +31,21 @@ import { Restaurant } from '../entities/restaurant.entity';
 //   @IsString()
 //   categoryName: string;
 // }
+// @InputType()
+// export class CreateRestaurantDto extends OmitType(
+//   Restaurant,
+//   ['id'],
+//   // InputType,// we can use InputType here or Abstract InputType in service
+// ) {}
 @InputType()
-export class CreateRestaurantDto extends OmitType(
+export class CreateRestaurantInput extends PickType(
   Restaurant,
-  ['id'],
+  ['address', 'coverImage', 'name'],
   // InputType,// we can use InputType here or Abstract InputType in service
-) {}
+) {
+  @Field(() => String)
+  categoryName: string;
+}
+
+@ObjectType()
+export class CreateRestaurantOutput extends MutationOutput {}

@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { JwtService } from 'src/jwt/jwt.service';
 import { MailService } from 'src/mail/mail.service';
-import { getRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { EmailVerification } from './entities/email-verification.entity';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
@@ -229,7 +229,7 @@ describe('UserService', () => {
         emailVerified: false,
       };
 
-      userRepository.findOne.mockResolvedValue(oldUser);
+      userRepository.findOne.mockResolvedValueOnce(oldUser);
       emailVerificationsRepository.create.mockReturnValue(newVerification);
       emailVerificationsRepository.save.mockResolvedValue(newVerification);
 
@@ -238,7 +238,7 @@ describe('UserService', () => {
         editProfileArgs.input,
       );
 
-      expect(userRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(userRepository.findOne).toHaveBeenCalledTimes(2);
       expect(userRepository.findOne).toHaveBeenCalledWith(
         editProfileArgs.userId,
       );

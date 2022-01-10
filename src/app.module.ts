@@ -12,14 +12,16 @@ import { join } from 'path';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import * as Joi from 'joi';
 
-import { Restaurant } from './restaurants/entities/restaurant.entity';
 import { UsersModule } from './users/users.module';
-import { CommonModule } from './common/common.module';
 import { User } from './users/entities/user.entity';
 import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 import { EmailVerification } from './users/entities/email-verification.entity';
 import { MailModule } from './mail/mail.module';
+import { Restaurant } from './restaurants/entities/restaurant.entity';
+import { Category } from './restaurants/entities/category.entity';
+import { AuthModule } from './auth/auth.module';
+import { Dish } from './restaurants/entities/dish.entity';
 
 @Module({
   imports: [
@@ -54,7 +56,7 @@ import { MailModule } from './mail/mail.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [Restaurant, User, EmailVerification],
+      entities: [User, EmailVerification, Restaurant, Category, Dish],
       synchronize: process.env.NODE_ENV !== 'production',
       logging: process.env.NODE_ENV !== 'test',
     }),
@@ -66,6 +68,7 @@ import { MailModule } from './mail/mail.module';
       emailDomain: process.env.MAILGUN_DOMAIN_NAME,
       fromEmail: process.env.MAILGUN_FROM_EMAIL,
     }),
+    AuthModule,
     UsersModule,
     RestaurantsModule,
   ],

@@ -6,21 +6,22 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import { hash } from 'bcrypt';
-import { IsEmail, IsEnum } from 'class-validator';
-import { CoreEntity } from 'src/common/entities/core.enity';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { IsBoolean, IsEmail, IsEnum, IsString } from 'class-validator';
+import { CoreEntity } from 'src/common/entities/core.entity';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Restaurant } from 'src/restaurants/entities/restaurant.entity';
 
 // type UserRole = 'client' | 'owner' | 'delivery';
-enum UserRole {
-  Client,
-  Owner,
-  Delivery,
+export enum UserRole {
+  Client = 'Client',
+  Owner = 'Owner',
+  Delivery = 'Delivery',
 }
 
 registerEnumType(UserRole, { name: 'UserRole' });
 
-@InputType({ isAbstract: true })
+@InputType('UserInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
 export class User extends CoreEntity {
@@ -31,16 +32,22 @@ export class User extends CoreEntity {
 
   @Column({ default: false })
   @Field(() => Boolean)
+  @IsBoolean()
   emailVerified: boolean;
 
   @Column({ select: false })
   @Field(() => String)
+  @IsString()
   password: string;
 
   @Column({ type: 'enum', enum: UserRole })
   @Field(() => UserRole)
   @IsEnum(UserRole)
   role: UserRole;
+
+  @Field(() => [Restaurant])
+  @OneToMany(() => Restaurant, (restaurant) => restaurant.owner)
+  restaurants: Restaurant[];
 
   @BeforeInsert()
   @BeforeUpdate()
