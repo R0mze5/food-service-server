@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "ms-azuretools.vscode-docker",
+    "apollographql.vscode-apollo",
+    "mikestead.dotenv",
+    "perkovec.emoji",
+    "dbaeumer.vscode-eslint",
+    "codezombiech.gitignore",
+    "graphql.vscode-graphql",
+    "orta.vscode-jest",
+    "andys8.jest-snippets"
+  ]
+}

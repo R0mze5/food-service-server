@@ -13,14 +13,17 @@ import { Role } from 'src/auth/role.decorator';
 import { User, UserRole } from 'src/users/entities/user.entity';
 import { AllCategoriesOutput } from './dtos/all-categories.dto';
 import { CategoryInput, CategoryOutput } from './dtos/category.dto';
+import { CreateDishInput, CreateDishOutput } from './dtos/create-dish.dto';
 import {
   CreateRestaurantInput,
   CreateRestaurantOutput,
 } from './dtos/create-restaurant.dto';
+import { DeleteDishInput, DeleteDishOutput } from './dtos/delete-dish.dto';
 import {
   DeleteRestaurantInput,
   DeleteRestaurantOutput,
 } from './dtos/deleteRestaurant.dto';
+import { EditDishOutput, EditDishInput } from './dtos/edit-dish.dto';
 import {
   EditRestaurantInput,
   EditRestaurantOutput,
@@ -32,6 +35,7 @@ import {
   SearchRestaurantOutput,
 } from './dtos/search-restaurant.dto';
 import { Category } from './entities/category.entity';
+import { Dish } from './entities/dish.entity';
 import { Restaurant } from './entities/restaurant.entity';
 import { RestaurantService } from './restaurants.service';
 
@@ -81,9 +85,9 @@ export class RestaurantResolver {
   @Role([UserRole.Owner])
   deleteRestaurant(
     @AuthUser() user: User,
-    @Args() editRestaurantInput: DeleteRestaurantInput,
+    @Args() deleteRestaurantInput: DeleteRestaurantInput,
   ): Promise<DeleteRestaurantOutput> {
-    return this.restaurantService.deleteRestaurant(user, editRestaurantInput);
+    return this.restaurantService.deleteRestaurant(user, deleteRestaurantInput);
   }
 
   @Query(() => RestaurantsOutput)
@@ -127,5 +131,37 @@ export class CategoryResolver {
     @Args('input') categoryInput: CategoryInput,
   ): Promise<CategoryOutput> {
     return this.restaurantService.findCategoryBySlug(categoryInput);
+  }
+}
+
+@Resolver(() => Dish)
+export class DishResolver {
+  constructor(private readonly restaurantService: RestaurantService) {}
+
+  @Mutation(() => CreateDishOutput)
+  @Role(['Owner'])
+  createDish(
+    @Args('input') createDishInput: CreateDishInput,
+    @AuthUser() user: User,
+  ): Promise<CreateDishOutput> {
+    return this.restaurantService.createDish(user, createDishInput);
+  }
+
+  @Mutation(() => EditDishOutput)
+  @Role(['Owner'])
+  editDish(
+    @Args('input') editDishInput: EditDishInput,
+    @AuthUser() user: User,
+  ): Promise<EditDishOutput> {
+    return this.restaurantService.editDish(user, editDishInput);
+  }
+
+  @Mutation(() => DeleteDishOutput)
+  @Role(['Owner'])
+  deleteDish(
+    @Args('input') deleteDishInput: DeleteDishInput,
+    @AuthUser() user: User,
+  ): Promise<DeleteDishOutput> {
+    return this.restaurantService.deleteDish(user, deleteDishInput);
   }
 }

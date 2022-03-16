@@ -28,7 +28,9 @@ import { Dish } from './restaurants/entities/dish.entity';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath:
-        process.env.NODE_ENV === 'development' ? '.env.dev' : '.env.test',
+        process.env.NODE_ENV === 'development'
+          ? '.env.development'
+          : '.env.test',
       ignoreEnvFile: process.env.NODE_ENV === 'production',
       validationSchema: Joi.object({
         NODE_ENV: Joi.string()
@@ -58,7 +60,7 @@ import { Dish } from './restaurants/entities/dish.entity';
       database: process.env.POSTGRES_DB,
       entities: [User, EmailVerification, Restaurant, Category, Dish],
       synchronize: process.env.NODE_ENV !== 'production',
-      logging: process.env.NODE_ENV !== 'test',
+      // logging: process.env.NODE_ENV !== 'test',
     }),
     JwtModule.forRoot({
       privateKey: process.env.TOKEN_SECRET,
