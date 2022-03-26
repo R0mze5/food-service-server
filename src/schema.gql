@@ -18,6 +18,41 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type OrderItemOption {
+  name: String!
+  choice: String
+  extra: Float
+}
+
+type OrderItem {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  dish: Dish!
+  options: [OrderItemOption!]
+}
+
+type Order {
+  id: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  customer: User
+  driver: User
+  restaurant: Restaurant
+  items: [OrderItem!]!
+  total: Float
+  status: OrderStatus!
+}
+
+enum OrderStatus {
+  Pending
+  Cooking
+  Cooked
+  PickedUp
+  Delivered
+  Cancel
+}
+
 type User {
   id: Float!
   createdAt: DateTime!
@@ -26,6 +61,8 @@ type User {
   emailVerified: Boolean!
   password: String!
   role: UserRole!
+  orders: [Order!]!
+  rides: [Order!]!
   restaurants: [Restaurant!]!
 }
 
@@ -44,12 +81,18 @@ type Restaurant {
   category: Category
   owner: User!
   address: String!
+  orders: [Order!]!
   menu: [Dish!]!
+}
+
+type DishChoice {
+  name: String!
+  extra: Float
 }
 
 type DishOption {
   name: String!
-  choices: [String!]
+  choices: [DishChoice!]
   extra: Float
 }
 
@@ -157,6 +200,33 @@ type VerifyEmailOutput {
   ok: Boolean!
 }
 
+type AcceptOrderOutput {
+  error: String
+  ok: Boolean!
+}
+
+type CreateOrderOutput {
+  error: String
+  ok: Boolean!
+}
+
+type EditOrderOutput {
+  error: String
+  ok: Boolean!
+}
+
+type GetOrderOutput {
+  error: String
+  ok: Boolean!
+  order: Order
+}
+
+type GetOrdersOutput {
+  error: String
+  ok: Boolean!
+  orders: [Order!]
+}
+
 type Query {
   getProfile: User!
   getUserDetails(userId: Float!): UserProfileOutput!
@@ -165,6 +235,8 @@ type Query {
   searchRestaurant(input: SearchRestaurantInput!): SearchRestaurantOutput!
   allCategories: AllCategoriesOutput!
   findCategoryBySlug(input: CategoryInput!): CategoryOutput!
+  getOrders(input: GetOrdersInput!): GetOrdersOutput!
+  getOrder(orderId: Int!): GetOrderOutput!
 }
 
 input RestaurantsInput {
@@ -181,6 +253,10 @@ input CategoryInput {
   slug: String!
 }
 
+input GetOrdersInput {
+  status: OrderStatus
+}
+
 type Mutation {
   createAccount(input: CreateAccountDto!): CreateAccountOutput!
   editProfile(input: EditProfileInput!): EditProfileOutput!
@@ -192,6 +268,9 @@ type Mutation {
   createDish(input: CreateDishInput!): CreateDishOutput!
   editDish(input: EditDishInput!): EditDishOutput!
   deleteDish(input: DeleteDishInput!): DeleteDishOutput!
+  createOrder(input: CreateOrderInput!): CreateOrderOutput!
+  editOrder(input: EditOrderInput!): EditOrderOutput!
+  acceptOrder(input: AcceptOrderInput!): AcceptOrderOutput!
 }
 
 input CreateAccountDto {
@@ -239,19 +318,59 @@ input CreateDishInput {
 
 input DishOptionInputType {
   name: String!
-  choices: [String!]
+  choices: [DishChoiceInputType!]
+  extra: Float
+}
+
+input DishChoiceInputType {
+  name: String!
   extra: Float
 }
 
 input EditDishInput {
   name: String
   price: Float
+  photo: String
   description: String
   options: [DishOptionInputType!]
-  restaurantId: Float
   dishId: Float!
 }
 
 input DeleteDishInput {
   dishId: Float
+}
+
+input CreateOrderInput {
+  restaurantId: Float!
+  items: [CreateOrderItemInput!]!
+}
+
+input CreateOrderItemInput {
+  dishId: Float!
+  options: [OrderItemOptionInputType!]
+}
+
+input OrderItemOptionInputType {
+  name: String!
+  choice: String
+  extra: Float
+}
+
+input EditOrderInput {
+  id: Float!
+  status: OrderStatus!
+}
+
+input AcceptOrderInput {
+  id: Float!
+}
+
+type Subscription {
+  pendingOrders: Order!
+  cookedOrders: Order!
+  orderUpdates(input: OrderUpdatesInput!): Order!
+}
+
+input OrderUpdatesInput {
+  id: Float!
 }

@@ -11,6 +11,7 @@ import { CoreEntity } from 'src/common/entities/core.entity';
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Restaurant } from 'src/restaurants/entities/restaurant.entity';
+import { Order } from 'src/orders/entities/order.entity';
 
 // type UserRole = 'client' | 'owner' | 'delivery';
 export enum UserRole {
@@ -44,6 +45,14 @@ export class User extends CoreEntity {
   @Field(() => UserRole)
   @IsEnum(UserRole)
   role: UserRole;
+
+  @Field(() => [Order])
+  @OneToMany(() => Order, (order) => order.customer)
+  orders: Order[];
+
+  @Field(() => [Order])
+  @OneToMany(() => Order, (order) => order.driver)
+  rides: Order[];
 
   @Field(() => [Restaurant])
   @OneToMany(() => Restaurant, (restaurant) => restaurant.owner)

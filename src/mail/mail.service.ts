@@ -49,15 +49,15 @@ export class MailService {
   }
 
   sendVerificationEmail(email: string, code: string) {
-    // console.log({email, code})
-    this.sendEmail(
-      'Verify your Email',
-      email,
-      [
-        { key: 'code', value: code },
-        { key: 'username', value: email },
-      ],
-      'verify-email',
-    );
+    console.log({ email, code });
+    // this.sendEmail(
+    //   'Verify your Email',
+    //   email,
+    //   [
+    //     { key: 'code', value: code },
+    //     { key: 'username', value: email },
+    //   ],
+    //   'verify-email',
+    // );
   }
 }

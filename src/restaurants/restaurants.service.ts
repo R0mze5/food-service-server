@@ -266,21 +266,19 @@ export class RestaurantService {
     { dishId, ...editRestaurantInput }: EditDishInput,
   ): Promise<EditDishOutput> {
     try {
-      const dish: Dish = await this.dishes.findOne(dishId);
+      const dish: Dish = await this.dishes.findOne(dishId, {
+        relations: ['restaurant'],
+      });
 
       if (!dish) {
         return { ok: false, error: 'Dish not found' };
       }
 
-      const restaurant = await this.restaurants.findOneOrFail({
-        id: dish.restaurantId,
-      });
-
-      if (restaurant.ownerId !== user.id) {
+      if (dish.restaurant.ownerId !== user.id) {
         return { ok: false, error: 'Forbidden' };
       }
 
-      await this.dishes.save([{ ...dish, ...editRestaurantInput }]);
+      await this.dishes.save({ ...dish, ...editRestaurantInput });
 
       return { ok: true };
     } catch {
@@ -296,17 +294,15 @@ export class RestaurantService {
     { dishId }: DeleteDishInput,
   ): Promise<DeleteDishOutput> {
     try {
-      const dish: Dish = await this.dishes.findOne(dishId);
+      const dish: Dish = await this.dishes.findOne(dishId, {
+        relations: ['restaurant'],
+      });
 
       if (!dish) {
         return { ok: false, error: 'Dish not found' };
       }
 
-      const restaurant = await this.restaurants.findOneOrFail({
-        id: dish.restaurantId,
-      });
-
-      if (restaurant.ownerId !== user.id) {
+      if (dish.restaurant.ownerId !== user.id) {
         return { ok: false, error: 'Forbidden' };
       }
 

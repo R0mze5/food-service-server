@@ -1,13 +1,20 @@
-import { Field, InputType, ObjectType, PartialType } from '@nestjs/graphql';
-import { MutationOutput } from 'src/common/dtos/output.dto';
+import {
+  Field,
+  InputType,
+  ObjectType,
+  PartialType,
+  PickType,
+} from '@nestjs/graphql';
+import { CoreOutput } from 'src/common/dtos/output.dto';
 import { Dish } from '../entities/dish.entity';
-import { CreateDishInput } from './create-dish.dto';
 
 @InputType()
-export class EditDishInput extends PartialType(CreateDishInput) {
+export class EditDishInput extends PartialType(
+  PickType(Dish, ['name', 'description', 'price', 'photo', 'options']),
+) {
   @Field(() => Number)
   dishId: Dish['id'];
 }
 
 @ObjectType()
-export class EditDishOutput extends MutationOutput {}
+export class EditDishOutput extends CoreOutput {}
