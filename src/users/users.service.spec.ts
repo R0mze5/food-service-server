@@ -4,7 +4,7 @@ import { JwtService } from 'src/jwt/jwt.service';
 import { MailService } from 'src/mail/mail.service';
 import { Repository } from 'typeorm';
 import { EmailVerification } from './entities/email-verification.entity';
-import { User } from './entities/user.entity';
+import { User, UserRole } from './entities/user.entity';
 import { UsersService } from './users.service';
 
 const mockRepository = () => ({
@@ -75,7 +75,7 @@ describe('UserService', () => {
     const createAccountArgs = {
       email: '',
       password: '',
-      role: 0,
+      role: UserRole.Owner,
     };
 
     const createEmailVerificationArgs = { code: '1', user: createAccountArgs };

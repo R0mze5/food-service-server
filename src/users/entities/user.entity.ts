@@ -12,6 +12,7 @@ import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Restaurant } from 'src/restaurants/entities/restaurant.entity';
 import { Order } from 'src/orders/entities/order.entity';
+import { Payment } from 'src/payment/entities/payment.entity';
 
 // type UserRole = 'client' | 'owner' | 'delivery';
 export enum UserRole {
@@ -49,6 +50,10 @@ export class User extends CoreEntity {
   @Field(() => [Order])
   @OneToMany(() => Order, (order) => order.customer)
   orders: Order[];
+
+  @Field(() => [Payment])
+  @OneToMany(() => Payment, (payment) => payment.user)
+  payments: Payment[];
 
   @Field(() => [Order])
   @OneToMany(() => Order, (order) => order.driver)
