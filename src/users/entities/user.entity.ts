@@ -70,7 +70,6 @@ export class User extends CoreEntity {
       try {
         this.password = await hash(this.password, 10);
       } catch (error) {
-        console.log(error);
         // send error to catch of create user service
         throw new InternalServerErrorException(error);
       }

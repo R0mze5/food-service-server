@@ -62,8 +62,7 @@ export class RestaurantService {
       return {
         ok: true,
       };
-    } catch (error) {
-      console.log(error);
+    } catch {
       return {
         ok: false,
         error: "can't create restaurant",

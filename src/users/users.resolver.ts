@@ -1,14 +1,12 @@
-import { UseGuards } from '@nestjs/common';
-import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { AuthUser } from 'src/auth/auth-user.decorator';
-import { AuthGuard } from 'src/auth/auth.guard';
 import { Role } from 'src/auth/role.decorator';
 import {
-  CreateAccountDto,
+  CreateAccountInput,
   CreateAccountOutput,
 } from './dtos/create-account.dto';
 import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
-import { LoginDto, LoginOutput } from './dtos/login.dto';
+import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { UserProfileInput, UserProfileOutput } from './dtos/user-profile.dto';
 import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto';
 import { User } from './entities/user.entity';
@@ -37,7 +35,7 @@ export class UsersResolver {
 
   @Mutation(() => CreateAccountOutput)
   createAccount(
-    @Args('input') createAccountInput: CreateAccountDto,
+    @Args('input') createAccountInput: CreateAccountInput,
   ): Promise<CreateAccountOutput> {
     return this.userService.createAccount(createAccountInput);
   }
@@ -53,7 +51,7 @@ export class UsersResolver {
   }
 
   @Mutation(() => LoginOutput)
-  login(@Args('input') loginInput: LoginDto): Promise<LoginOutput> {
+  login(@Args('input') loginInput: LoginInput): Promise<LoginOutput> {
     return this.userService.login(loginInput);
   }
 

@@ -282,9 +282,9 @@ input GetOrdersInput {
 }
 
 type Mutation {
-  createAccount(input: CreateAccountDto!): CreateAccountOutput!
+  createAccount(input: CreateAccountInput!): CreateAccountOutput!
   editProfile(input: EditProfileInput!): EditProfileOutput!
-  login(input: LoginDto!): LoginOutput!
+  login(input: LoginInput!): LoginOutput!
   verifyEmail(input: VerifyEmailInput!): VerifyEmailOutput!
   createRestaurant(input: CreateRestaurantInput!): CreateRestaurantOutput!
   editRestaurant(input: EditRestaurantInput!): EditRestaurantOutput!
@@ -298,7 +298,7 @@ type Mutation {
   createPayment(input: CreatePaymentInput!): CreatePaymentOutput!
 }
 
-input CreateAccountDto {
+input CreateAccountInput {
   email: String!
   password: String!
   role: UserRole!
@@ -309,7 +309,7 @@ input EditProfileInput {
   password: String
 }
 
-input LoginDto {
+input LoginInput {
   email: String!
   password: String!
 }

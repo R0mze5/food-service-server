@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {
-  CreateAccountDto,
+  CreateAccountInput,
   CreateAccountOutput,
 } from './dtos/create-account.dto';
-import { LoginDto, LoginOutput } from './dtos/login.dto';
+import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { User } from './entities/user.entity';
 // import { ConfigService } from '@nestjs/config';
 import { JwtService } from 'src/jwt/jwt.service';
@@ -30,7 +30,7 @@ export class UsersService {
     email,
     password,
     role,
-  }: CreateAccountDto): Promise<CreateAccountOutput> {
+  }: CreateAccountInput): Promise<CreateAccountOutput> {
     try {
       const isExist = await this.users.findOne({ email });
       if (isExist) {
@@ -142,7 +142,7 @@ export class UsersService {
     }
   }
 
-  async login({ email, password }: LoginDto): Promise<LoginOutput> {
+  async login({ email, password }: LoginInput): Promise<LoginOutput> {
     try {
       const user = await this.users.findOne(
         { email },
