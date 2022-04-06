@@ -127,10 +127,11 @@ type AllCategoriesOutput {
   categories: [Category!]!
 }
 
-type CategoryOutput {
+type FindCategoryBySlugOutput {
   error: String
   ok: Boolean!
   totalPages: Float
+  totalResults: Float
   category: Category
   restaurants: [Restaurant!]!
 }
@@ -165,7 +166,7 @@ type EditRestaurantOutput {
   ok: Boolean!
 }
 
-type RestaurantOutput {
+type RestaurantByIdOutput {
   error: String
   ok: Boolean!
   restaurant: Restaurant
@@ -175,6 +176,7 @@ type RestaurantsOutput {
   error: String
   ok: Boolean!
   totalPages: Float
+  totalResults: Float
   restaurants: [Restaurant!]
 }
 
@@ -182,6 +184,7 @@ type SearchRestaurantOutput {
   error: String
   ok: Boolean!
   totalPages: Float
+  totalResults: Float
   restaurants: [Restaurant!]
 }
 
@@ -254,10 +257,10 @@ type Query {
   getProfile: User!
   getUserDetails(userId: Float!): UserProfileOutput!
   restaurants(input: RestaurantsInput!): RestaurantsOutput!
-  restaurantById(restaurantId: Float!): RestaurantOutput!
+  restaurantById(input: RestaurantByIdInput!): RestaurantByIdOutput!
   searchRestaurant(input: SearchRestaurantInput!): SearchRestaurantOutput!
   allCategories: AllCategoriesOutput!
-  findCategoryBySlug(input: CategoryInput!): CategoryOutput!
+  findCategoryBySlug(input: FindCategoryBySlugInput!): FindCategoryBySlugOutput!
   getOrders(input: GetOrdersInput!): GetOrdersOutput!
   getOrder(orderId: Int!): GetOrderOutput!
   getPayments: GetPaymentsOutput!
@@ -267,12 +270,16 @@ input RestaurantsInput {
   page: Float = 1
 }
 
+input RestaurantByIdInput {
+  restaurantId: Float!
+}
+
 input SearchRestaurantInput {
   page: Float = 1
   query: String!
 }
 
-input CategoryInput {
+input FindCategoryBySlugInput {
   page: Float = 1
   slug: String!
 }

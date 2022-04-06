@@ -1,6 +1,5 @@
 import {
   Args,
-  Field,
   Int,
   Mutation,
   Parent,
@@ -12,7 +11,10 @@ import { AuthUser } from 'src/auth/auth-user.decorator';
 import { Role } from 'src/auth/role.decorator';
 import { User, UserRole } from 'src/users/entities/user.entity';
 import { AllCategoriesOutput } from './dtos/all-categories.dto';
-import { CategoryInput, CategoryOutput } from './dtos/category.dto';
+import {
+  FindCategoryBySlugInput,
+  FindCategoryBySlugOutput,
+} from './dtos/findCategoryBySlug.dto';
 import { CreateDishInput, CreateDishOutput } from './dtos/create-dish.dto';
 import {
   CreateRestaurantInput,
@@ -28,7 +30,10 @@ import {
   EditRestaurantInput,
   EditRestaurantOutput,
 } from './dtos/edit-restaurant.dto';
-import { RestaurantInput, RestaurantOutput } from './dtos/restaurant.dto';
+import {
+  RestaurantByIdInput,
+  RestaurantByIdOutput,
+} from './dtos/restaurantById.dto';
 import { RestaurantsInput, RestaurantsOutput } from './dtos/restaurants.dto';
 import {
   SearchRestaurantInput,
@@ -97,10 +102,10 @@ export class RestaurantResolver {
     return this.restaurantService.allRestaurants(restaurantsInput);
   }
 
-  @Query(() => RestaurantOutput)
+  @Query(() => RestaurantByIdOutput)
   restaurantById(
-    @Args() restaurantInput: RestaurantInput,
-  ): Promise<RestaurantOutput> {
+    @Args('input') restaurantInput: RestaurantByIdInput,
+  ): Promise<RestaurantByIdOutput> {
     return this.restaurantService.restaurantById(restaurantInput);
   }
 
@@ -126,10 +131,10 @@ export class CategoryResolver {
     return this.restaurantService.allCategories();
   }
 
-  @Query(() => CategoryOutput)
+  @Query(() => FindCategoryBySlugOutput)
   findCategoryBySlug(
-    @Args('input') categoryInput: CategoryInput,
-  ): Promise<CategoryOutput> {
+    @Args('input') categoryInput: FindCategoryBySlugInput,
+  ): Promise<FindCategoryBySlugOutput> {
     return this.restaurantService.findCategoryBySlug(categoryInput);
   }
 }
