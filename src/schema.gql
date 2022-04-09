@@ -188,6 +188,12 @@ type SearchRestaurantOutput {
   restaurants: [Restaurant!]
 }
 
+type MyRestaurantsOutput {
+  error: String
+  ok: Boolean!
+  restaurants: [Restaurant!]
+}
+
 type CreateAccountOutput {
   error: String
   ok: Boolean!
@@ -257,6 +263,7 @@ type Query {
   getProfile: User!
   getUserDetails(userId: Float!): UserProfileOutput!
   restaurants(input: RestaurantsInput!): RestaurantsOutput!
+  myRestaurants: MyRestaurantsOutput!
   restaurantById(input: RestaurantByIdInput!): RestaurantByIdOutput!
   searchRestaurant(input: SearchRestaurantInput!): SearchRestaurantOutput!
   allCategories: AllCategoriesOutput!

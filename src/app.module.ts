@@ -25,6 +25,8 @@ import { CommonModule } from './common/common.module';
 import { PaymentModule } from './payment/payment.module';
 import { Payment } from './payment/entities/payment.entity';
 import { ScheduleModule } from '@nestjs/schedule';
+import { UploadsModule } from './uploads/uploads.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 const TOKEN_KEY = 'x-jwt';
 @Module({
@@ -68,6 +70,10 @@ const TOKEN_KEY = 'x-jwt';
       //   return { user: req['user'] };
       // },
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../files'),
+      renderPath: '/files',
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.POSTGRES_HOST,
@@ -103,6 +109,7 @@ const TOKEN_KEY = 'x-jwt';
     OrdersModule,
     CommonModule,
     PaymentModule,
+    UploadsModule,
   ],
 })
 export class AppModule {}

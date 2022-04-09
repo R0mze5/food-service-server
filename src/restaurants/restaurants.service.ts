@@ -35,6 +35,7 @@ import { Category } from './entities/category.entity';
 import { Dish } from './entities/dish.entity';
 import { Restaurant } from './entities/restaurant.entity';
 import { CategoryRepository } from './repositories/category.repository';
+import { MyRestaurantsOutput } from './dtos/my-restaurants.dto';
 
 @Injectable()
 export class RestaurantService {
@@ -211,6 +212,25 @@ export class RestaurantService {
       return {
         ok: true,
         totalPages: Math.ceil(totalResults / pageSize),
+        restaurants,
+      };
+    } catch {
+      return { ok: false, error: "can't find restaurants" };
+    }
+  }
+
+  async myRestaurants(owner: User): Promise<MyRestaurantsOutput> {
+    try {
+      const restaurants = await this.restaurants.find({
+        owner,
+      });
+
+      // category.restaurants = restaurants;
+
+      // const totalResults = await this.countRestaurants(category);
+
+      return {
+        ok: true,
         restaurants,
       };
     } catch {
