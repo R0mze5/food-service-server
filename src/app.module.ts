@@ -62,13 +62,20 @@ const TOKEN_KEY = 'x-jwt';
             return { token: connectionParams?.[TOKEN_KEY] };
           },
         },
+        'graphql-ws': {
+          onConnect: (connectionParams) => {
+            // console.log(connectionParams);
+            return { token: connectionParams?.[TOKEN_KEY] };
+          },
+        },
       },
-      context: ({ req }) => {
-        return { token: req['headers']?.[TOKEN_KEY] };
+      context: ({ req, connectionParams }) => {
+        if (!req) {
+          return { token: connectionParams?.[TOKEN_KEY] };
+        }
+        return { token: req?.['headers']?.[TOKEN_KEY] };
       },
-      // context: ({ req }) => {
-      //   return { user: req['user'] };
-      // },
+      playground: process.env.NODE_ENV !== 'production',
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../files'),

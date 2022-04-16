@@ -144,6 +144,7 @@ type CreateDishOutput {
 type CreateRestaurantOutput {
   error: String
   ok: Boolean!
+  restaurantId: Int
 }
 
 type DeleteDishOutput {
@@ -194,6 +195,12 @@ type MyRestaurantsOutput {
   restaurants: [Restaurant!]
 }
 
+type MyRestaurantByIdOutput {
+  error: String
+  ok: Boolean!
+  restaurant: Restaurant
+}
+
 type CreateAccountOutput {
   error: String
   ok: Boolean!
@@ -229,6 +236,7 @@ type AcceptOrderOutput {
 type CreateOrderOutput {
   error: String
   ok: Boolean!
+  orderId: Float
 }
 
 type EditOrderOutput {
@@ -264,6 +272,7 @@ type Query {
   getUserDetails(userId: Float!): UserProfileOutput!
   restaurants(input: RestaurantsInput!): RestaurantsOutput!
   myRestaurants: MyRestaurantsOutput!
+  myRestaurantById(input: MyRestaurantByIdInput!): MyRestaurantByIdOutput!
   restaurantById(input: RestaurantByIdInput!): RestaurantByIdOutput!
   searchRestaurant(input: SearchRestaurantInput!): SearchRestaurantOutput!
   allCategories: AllCategoriesOutput!
@@ -275,6 +284,10 @@ type Query {
 
 input RestaurantsInput {
   page: Float = 1
+}
+
+input MyRestaurantByIdInput {
+  id: Float!
 }
 
 input RestaurantByIdInput {
@@ -350,9 +363,10 @@ input EditRestaurantInput {
 input CreateDishInput {
   name: String!
   price: Float!
+  photo: String
   description: String!
-  options: [DishOptionInputType!]
   restaurantId: Float!
+  options: [DishOptionInputType!]
 }
 
 input DishOptionInputType {

@@ -44,6 +44,10 @@ import { Dish } from './entities/dish.entity';
 import { Restaurant } from './entities/restaurant.entity';
 import { RestaurantService } from './restaurants.service';
 import { MyRestaurantsOutput } from './dtos/my-restaurants.dto';
+import {
+  MyRestaurantByIdInput,
+  MyRestaurantByIdOutput,
+} from './dtos/my-restaurant-by-id.dto';
 
 @Resolver(() => Restaurant)
 export class RestaurantResolver {
@@ -107,6 +111,15 @@ export class RestaurantResolver {
   @Role(['Owner'])
   myRestaurants(@AuthUser() user: User) {
     return this.restaurantService.myRestaurants(user);
+  }
+
+  @Query(() => MyRestaurantByIdOutput)
+  @Role(['Owner'])
+  myRestaurantById(
+    @AuthUser() user: User,
+    @Args('input') myRestaurantByIdInput: MyRestaurantByIdInput,
+  ) {
+    return this.restaurantService.myRestaurantById(user, myRestaurantByIdInput);
   }
 
   @Query(() => RestaurantByIdOutput)

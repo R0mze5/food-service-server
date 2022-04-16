@@ -116,7 +116,7 @@ export class OrderService {
         pendingOrders: { order, restaurantOwnerId: restaurant.ownerId },
       });
 
-      return { ok: true };
+      return { ok: true, orderId: order.id };
     } catch {
       return {
         ok: false,

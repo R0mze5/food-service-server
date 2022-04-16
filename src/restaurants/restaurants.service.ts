@@ -36,6 +36,10 @@ import { Dish } from './entities/dish.entity';
 import { Restaurant } from './entities/restaurant.entity';
 import { CategoryRepository } from './repositories/category.repository';
 import { MyRestaurantsOutput } from './dtos/my-restaurants.dto';
+import {
+  MyRestaurantByIdInput,
+  MyRestaurantByIdOutput,
+} from './dtos/my-restaurant-by-id.dto';
 
 @Injectable()
 export class RestaurantService {
@@ -68,6 +72,7 @@ export class RestaurantService {
 
       return {
         ok: true,
+        restaurantId: newRestaurant.id,
       };
     } catch {
       return {
@@ -181,7 +186,7 @@ export class RestaurantService {
   }: RestaurantByIdInput): Promise<RestaurantByIdOutput> {
     try {
       const restaurant = await this.restaurants.findOneOrFail(restaurantId, {
-        relations: ['category'],
+        relations: ['category', 'menu'],
       });
 
       return {
@@ -235,6 +240,27 @@ export class RestaurantService {
       };
     } catch {
       return { ok: false, error: "can't find restaurants" };
+    }
+  }
+
+  async myRestaurantById(
+    user: User,
+    { id }: MyRestaurantByIdInput,
+  ): Promise<MyRestaurantByIdOutput> {
+    try {
+      const restaurant = await this.restaurants.findOneOrFail(
+        { id, owner: user },
+        {
+          relations: ['category', 'menu', 'orders'],
+        },
+      );
+
+      return {
+        ok: true,
+        restaurant,
+      };
+    } catch {
+      return { ok: false, error: "can't find restaurant" };
     }
   }
 

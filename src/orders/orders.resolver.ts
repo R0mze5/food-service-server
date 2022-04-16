@@ -16,7 +16,7 @@ import { EditOrderInput, EditOrderOutput } from './dtos/edit-order.dto';
 import { GetOrderInput, GetOrderOutput } from './dtos/get-order.dto';
 import { GetOrdersInput, GetOrdersOutput } from './dtos/get-orders.dto';
 import { OrderUpdatesInput } from './dtos/order-updated.dto';
-import { Order, OrderStatus } from './entities/order.entity';
+import { Order } from './entities/order.entity';
 import { OrderService } from './orders.service';
 
 @Resolver(() => OrderService)
